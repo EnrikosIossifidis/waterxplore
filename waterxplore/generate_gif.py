@@ -10,7 +10,7 @@ import os
 os.chdir("../")
 from landsatxplore.api import API
 from landsatxplore.earthexplorer import EarthExplorer, EarthExplorerError
-os.chdir("./generate_gif")
+os.chdir("./waterxplore")
 
 def get_landsat_scenes(username, password, lat, long, date):
     previous_month, next_month = get_previous_and_next_month_dates(date)
