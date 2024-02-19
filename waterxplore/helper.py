@@ -10,7 +10,7 @@ import rasterio
 import rasterio.mask
 from shapely.geometry import Point
 from datetime import timedelta
-from GIS_operations import clip
+from waterxplore.GIS_operations import clip
 
 def unzip_tar(f,dest):
     file = tarfile.open(f)
@@ -18,8 +18,8 @@ def unzip_tar(f,dest):
     file.close()
 
 def get_previous_and_next_month_dates(input_date):
-    previous_month_date = input_date - timedelta(days=80)
-    next_month_date = input_date + timedelta(days=80)  # Using 31 days to ensure we move to the next month
+    previous_month_date = input_date - timedelta(days=10)
+    next_month_date = input_date + timedelta(days=10)  # Using 31 days to ensure we move to the next month
     return previous_month_date, next_month_date
 
 def get_user_input(rad=2500,name='test',year=2023,month=7,day=8):
@@ -27,12 +27,12 @@ def get_user_input(rad=2500,name='test',year=2023,month=7,day=8):
     latlong = latlong.split(",")
     lat = float(latlong[0])
     long = float(latlong[1])
-    name = 'test'
-    rad = float(input("Radius around point: "))
-    name = input("Name area: ")
-    year = int(input('Enter a year '))
-    month = int(input('Enter a month (number) '))
-    day = int(input('Enter a day (number) '))
+    # name = 'test'
+    # rad = float(input("Radius around point: "))
+    # name = input("Name area: ")
+    # year = int(input('Enter a year '))
+    # month = int(input('Enter a month (number) '))
+    # day = int(input('Enter a day (number) '))
     date = datetime.date(year, month, day)
     return lat,long,rad,name,date
 

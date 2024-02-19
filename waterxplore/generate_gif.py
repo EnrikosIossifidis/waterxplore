@@ -2,10 +2,10 @@ import glob
 import rasterio
 import numpy as np
 from datetime import datetime
-from helper import create_gpkg, get_previous_and_next_month_dates, \
+from waterxplore.helper import create_gpkg, get_previous_and_next_month_dates, \
                     get_user_input, plot_rgb_temp, get_clipped_rgb, unzip_tar
-from GIS_operations import mask_erode_temperature,clip,loadfile
-from make_gif import makegif
+from waterxplore.GIS_operations import mask_erode_temperature,clip,loadfile
+from waterxplore.make_gif import makegif
 import os
 os.chdir("../")
 from landsatxplore.api import API

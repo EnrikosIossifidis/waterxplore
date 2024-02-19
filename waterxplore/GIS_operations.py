@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import rasterio
 import rasterio.mask
-import level2_temperature
+import waterxplore.level2_temperature as level2_temperature
 import geopandas as gpd
 
 def loadfile(file='../../data/brt/top100nl_Waterdeel.gpkg',dis=True):
