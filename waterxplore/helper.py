@@ -18,8 +18,8 @@ def unzip_tar(f,dest):
     file.close()
 
 def get_previous_and_next_month_dates(input_date):
-    previous_month_date = input_date - timedelta(days=10)
-    next_month_date = input_date + timedelta(days=10)  # Using 31 days to ensure we move to the next month
+    previous_month_date = input_date - timedelta(days=30)
+    next_month_date = input_date + timedelta(days=30)  # Using 31 days to ensure we move to the next month
     return previous_month_date, next_month_date
 
 def get_user_input(rad=2500,name='test',year=2023,month=7,day=8):
@@ -65,25 +65,23 @@ def make_rgb(dest,image,data):
         dst.write((data["B2"]/65535*255), indexes=3)
     return dest
 
-def get_clipped_rgb(curdest, curname, aoi, outputdest, qa_band):
-    for i in glob.glob(curdest + "/unzipped/*"):
-        if curname in i:
-            bands = glob.glob(i + "/*")
-            qa_aoi_clip = clip(outputdest+'qa_aoi_clip.tif', qa_band, aoi)
-            image = rasterio.open(qa_aoi_clip)
-            im = image.read(1)
-            rgbbands = [j for j in bands if (("B2.TIF" in j) or ("B3.TIF" in j) or ("B4.TIF" in j)) and ("aux" not in j)]
-            rgbdata = {}
-            for rgbband in rgbbands:
-                band = rgbband[-6:-4]
-                r_dest = outputdest+band + ".tif"
-                r_clipped = clip(r_dest, rgbband, aoi)
-                image = rasterio.open(r_clipped)
-                im = image.read(1)
-                rgbdata[band] = im
-            return make_rgb(outputdest+'rgb.tif', image, rgbdata)
+def get_clipped_rgb(curdest, aoi, outputdest, qa_band):
+    bands = glob.glob(curdest + "/*")
+    qa_aoi_clip = clip(outputdest+'qa_aoi_clip.tif', qa_band, aoi)
+    image = rasterio.open(qa_aoi_clip)
+    im = image.read(1)
+    rgbbands = [j for j in bands if (("B2.TIF" in j) or ("B3.TIF" in j) or ("B4.TIF" in j)) and ("aux" not in j)]
+    rgbdata = {}
+    for rgbband in rgbbands:
+        band = rgbband[-6:-4]
+        r_dest = outputdest+band + "-clipped.tif"
+        r_clipped = clip(r_dest, rgbband, aoi)
+        image = rasterio.open(r_clipped)
+        im = image.read(1)
+        rgbdata[band] = im
+    return make_rgb(outputdest+'-rgb.tif', image, rgbdata)
 
-def plot_rgb_temp(name, curtemp, currgb, outputdest,vmin=10,vmax=30):
+def plot_rgb_temp(name, curtemp, currgb, outputdest,vmin=10,vmax=30,title=None):
     with rasterio.open(currgb) as src:
         rgb_data = src.read()
         rgb_data = rgb_data.astype(float)
@@ -111,7 +109,9 @@ def plot_rgb_temp(name, curtemp, currgb, outputdest,vmin=10,vmax=30):
     pos2.set_clim(vmin, vmax)
     fig.colorbar(pos2,label="Celsius")
     plt.axis('off')
-    plt.title(name[-10:])
+    if not title:
+        title = name.split("_")[-4]
+    plt.title(title)
     fig.tight_layout()
     plt.savefig(outputdest+'figures/'+name+'.png')
     # plt.show()

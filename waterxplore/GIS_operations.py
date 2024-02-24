@@ -68,7 +68,7 @@ def temperature(dest,im,image):
         dst.write(wts, indexes=1)
     return dest+'/water_temperature.tif'
 
-def mask_erode_temperature(files,dest,kernel=2,iter=1):
+def mask_erode_temperature(files,dest,kernel=2,iter=1,c=0):
     water = loadfile(r"C:\Users\RWS Datalab\Desktop\data\brt\top100nl_Waterdeel.gpkg")
     print("Load QA Pixel and B10 band")
     qa_file = ""
@@ -82,7 +82,7 @@ def mask_erode_temperature(files,dest,kernel=2,iter=1):
         qa_file = bands[1]
     qa_file = clip(dest + '/qa_water_clip.tif', qa_file, water)
     print("Mask with QA pixel")
-    masked = mask(dest,qa_file)
+    masked = mask(dest,qa_file,c)
     print("Erode")
     masked_eroded = erode(masked, kernel, iter)
     print("Update and save B10 band with mask and erosion",b10_file)

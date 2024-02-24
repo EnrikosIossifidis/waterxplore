@@ -10,7 +10,6 @@ from PIL import Image
 from datetime import datetime
 
 def dateobj(cur):
-    cur['date'] = datetime.strptime(cur['date'], "%d%m%Y")
     cur['date_str'] = str(cur['date'].strftime("%Y-%m-%d"))
     cur['date_ordinal'] = cur['date'].toordinal()
     return cur
@@ -27,13 +26,12 @@ def load_files(folder):
         data[data == 256] = np.nan
         med = np.nanmedian(data)
         medians.append(med)
-        t = tempfile.split("-")
-        date = t[0][-2:]+t[1]+t[2]
-        pathrow = t[0][-8:-2]
+
+        t = tempfile.split("_")
+        date = datetime.strptime(t[1][:8],"%Y%m%d")
+        pathrow = t[0][-6:]
         dates.append(date)
         prs.append(pathrow)
-        # print(data.shape,np.unique(data))
-        # print("MEDIAN",med)
     return pd.DataFrame(data={'medians': medians, 'date': dates,'pathrow':prs})
 
 def plot_timeline(folder,df):
@@ -65,12 +63,13 @@ def makegif(folder):
     df = load_files(folder)
     df = df.apply(dateobj, axis=1)
     df = df.sort_values('date_ordinal')
+    df.to_csv(folder+"/medians_of_temp_data.csv")
     df = plot_timeline(folder, df)
 
     temps = []
     for p, t in df[['pathrow', 'date']].values:
         for temp_img in temp_imgs:
-            if p + str(t.strftime("%d-%m-%Y")) == temp_img[-20:-4]:
+            if p +"_"+ str(t.strftime("%Y%m%d")) in temp_img:
                 temps.append(temp_img)
                 break
     df['temp_file'] = temps

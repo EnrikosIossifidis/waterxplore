@@ -10,6 +10,7 @@ from waterxplore.helper import create_gpkg, get_previous_and_next_month_dates, \
 from waterxplore.GIS_operations import mask_erode_temperature,clip,loadfile
 from waterxplore.make_gif import makegif
 from waterxplore.generate_gif import get_landsat_scenes,get_existing_temp_files
+from waterxplore.generate_hotspots import plot_hotspots
 from landsatxplore.api import API
 from landsatxplore.earthexplorer import EarthExplorer, EarthExplorerError
 from setuptools import setup, find_packages
@@ -19,11 +20,15 @@ def get_existing_temp_files2(dest,im_list):
     tempfiles = {i: 0 for i in im_list}
     for i in im_list:
         for f in files:
-            if i == f:
-                tempfiles[i] = f
+            if i in f:
+                temp_file = [file for file in glob.glob(f+"/*.tif") if 'temperature' in file]
+                if temp_file:
+                    tempfiles[i] = temp_file[0]
     return tempfiles
 
 if __name__ == "__main__":
+    months = {1:"januari",2:"februari",3:"maart",4:"april",5:"mei",6:"juni",7:"juli",
+              8:"augustus",9:"september",10:"oktober", 11:"november", 12:"december"}
 
     # get user input
     lat,long,rad,name,date = get_user_input()
@@ -32,16 +37,16 @@ if __name__ == "__main__":
         shutil.rmtree(output_dest)
     os.mkdir(output_dest)
     os.mkdir(output_dest+"/figures")
-    months = {1:"januari",2:"februari",3:"maart",4:"april",5:"mei",6:"juni",7:"juli",
-              8:"augustus",9:"september",10:"oktober", 11:"november", 12:"december"}
+
     # get aoi radius -> create shp area
     create_gpkg(long, lat, output_dest+"/"+name+'.gpkg',rad)
     aoi = loadfile(output_dest+"/"+name+'.gpkg')
 
     # get landsat images in area (around date)
     username = 'enrikosiossifidis'
-    password = 'Dummy'
+    password = 'Beatles-1969'
     images, im_list = get_landsat_scenes(username,password,lat,long,date)
+    print("LEN IMAGES",len(im_list),im_list)
 
     # retrieve existing temperature images
     classification_method = 0
@@ -49,37 +54,41 @@ if __name__ == "__main__":
     iterations = 1
     method = str(classification_method)+str(k)+str(iterations)
     processed_dest = "./data/processed/"+method
+    if not os.path.exists(processed_dest):
+        os.mkdir(processed_dest)
     tempfiles = get_existing_temp_files2(processed_dest, im_list)
-    print("TEMPFILES BEFORE", tempfiles)
-
-    # compute temperature maps (if not already computed)
     todownload = [k for k,v in tempfiles.items() if v==0]
-    print("LEN MISSING FILES", len(todownload),todownload[0])
-    cur = todownload[0]
-    curdate = datetime.strptime(cur.split("_")[3],"%Y%m%d")
-    curmonth = months[curdate.month]
-    landsat_dest = "./data/raw/" + curmonth + "/" + cur
+    # print("TEMPFILES BEFORE", tempfiles,"\nLEN MISSING RAW FILES", len(todownload))
 
-    try:
-        ee = EarthExplorer(username, password)
-        ee.download(cur, output_dir=landsat_dest)
-        ee.logout()
-    except EarthExplorerError:
-        print("")
-    tarfilename = glob.glob(landsat_dest+"/*.tar")
-    if tarfilename:
-        unzip_tar(tarfilename[0],landsat_dest)
-        os.remove(tarfilename[0])
-    processed_files_dest = processed_dest+"/"+cur
-    if not os.path.exists(processed_files_dest):
-        os.mkdir(processed_files_dest)
-    landsat_files = list(glob.glob(landsat_dest+"/*"))
-    if landsat_files:
-        curtempfile = mask_erode_temperature(landsat_files,processed_files_dest,k,iterations)
-        tempfiles[cur] = curtempfile # update tempfiles with last computed file
+    download = False
+    for cur in todownload:
+        curdate = datetime.strptime(cur.split("_")[3],"%Y%m%d")
+        curmonth = months[curdate.month]
+        landsat_dest = "./data/raw/" + curmonth + "/" + cur
+        if not os.path.exists(landsat_dest):
+            if download:
+                try:
+                    ee = EarthExplorer(username, password)
+                    ee.download(cur, output_dir=landsat_dest)
+                    ee.logout()
+                except EarthExplorerError:
+                    print("")
+                tarfilename = glob.glob(landsat_dest+"/*.tar")
+                if tarfilename:
+                    unzip_tar(tarfilename[0],landsat_dest)
+                    os.remove(tarfilename[0])
+
+        if os.path.exists(landsat_dest):
+            # compute temperature maps (if not already computed)
+            processed_files_dest = processed_dest+"/"+cur
+            os.mkdir(processed_files_dest)
+            landsat_files = list(glob.glob(landsat_dest+"/*"))
+            if landsat_files:
+                curtempfile = mask_erode_temperature(landsat_files,processed_files_dest,k,iterations,classification_method)
+                tempfiles[cur] = curtempfile # update tempfiles with last computed file
 
     # tempfiles = {cur:curtempfile}
-    print("TEMPFILES AFTER", tempfiles,len(tempfiles))
+    # print("TEMPFILES AFTER", tempfiles)
 
     temp_clipped_files = []
     rgb_clipped_files = []
@@ -87,20 +96,18 @@ if __name__ == "__main__":
     for name, curtemp in tempfiles.items():
         if curtemp:
             # clip satellite bands to aoi and save plot
-            date_str = name[6:]
-            date_format = "%d-%m-%Y"
-            date_obj = datetime.strptime(date_str, date_format)
-            curdate = str(date_obj.strftime("%Y%m%d"))
-            curname = name[:6]+"_"+curdate
-            curdest = r"C:\Users\RWS Datalab\Desktop\data\landsat"+"/"+months[date_obj.month]
-            qa_file = d+"/"+name+"/"
-            if not os.path.isfile(qa_file+"qa_water_clip.tif"):
-                if os.path.isfile(qa_file+method+"/qa_clip_water.tif"):
-                    qa_file = qa_file+method+"/qa_clip_water.tif"
+            curdate = datetime.strptime(name.split("_")[-4], "%Y%m%d")
+            curmonth = months[curdate.month]
+            curdest = processed_dest+"/"+name
+            cursplit = name.split("_")
+            curname = cursplit[2]+"_"+cursplit[3]
+            if os.path.isfile(curdest+"/qa_water_clip.tif"):
+                qa_file = curdest+"/qa_water_clip.tif"
             else:
-                qa_file = qa_file+"qa_water_clip.tif"
-            rgb_clipped_files.append(get_clipped_rgb(curdest, curname, aoi, output_dest+name, qa_file))
-            temp_clipped_files.append(clip(output_dest+name+'-temp-clipped.tif', curtemp, aoi))
+                continue
+            landsat_dest = "./data/raw/" + curmonth + "/" + name
+            rgb_clipped_files.append(get_clipped_rgb(landsat_dest, aoi, output_dest+"/"+curname, qa_file))
+            temp_clipped_files.append(clip(output_dest+"/"+curname+'-temp-clipped.tif', curtemp, aoi))
             names.append(name)
 
     vmin = 100
@@ -118,6 +125,7 @@ if __name__ == "__main__":
             vmax = curmax
 
     for ix, rgb in enumerate(rgb_clipped_files):
-        plot_rgb_temp(names[ix],temp_clipped_files[ix],rgb,output_dest,vmin,vmax)
+        plot_rgb_temp(names[ix],temp_clipped_files[ix],rgb,output_dest+"/",vmin,vmax)
 
     makegif(output_dest)
+    plot_hotspots(output_dest)
