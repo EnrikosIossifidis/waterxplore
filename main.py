@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     # get landsat images in area (around date)
     username = 'enrikosiossifidis'
-    password = 'Beatles-1969'
+    password = 'Dummy'
     images, im_list = get_landsat_scenes(username,password,lat,long,date)
     print("LEN IMAGES",len(im_list),im_list)
 

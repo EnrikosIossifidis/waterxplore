@@ -21,7 +21,7 @@ def load_tempfiles(tempfiles):
         shape = data.shape
         med = np.nanmedian(data)
         data = data - med
-        # data[data>5] = np.nan
+        data[data>5] = np.nan
         data = data.flatten()
         rowdata.append(data.data)
     return np.array(rowdata),shape,image
