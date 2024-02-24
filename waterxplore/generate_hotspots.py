@@ -21,7 +21,6 @@ def load_tempfiles(tempfiles):
         shape = data.shape
         med = np.nanmedian(data)
         data = data - med
-        data[data>5] = np.nan
         data = data.flatten()
         rowdata.append(data.data)
     return np.array(rowdata),shape,image
@@ -40,8 +39,7 @@ def plot_hotspots(dest=r"C:\Users\RWS Datalab\Desktop\cc\waterxplore\data\output
     tempfiles = [f for f in glob.glob(dest + "/*.tif") if 'temp' in f and 'aux' not in f]
 
     rowdata, org_shape, org_image = load_tempfiles(tempfiles)
-
-    rowdata[abs(rowdata) > 6] = np.nan  # remove pixels that differ more than 5 Celsius degrees
+    rowdata[abs(rowdata) > 5] = np.nan  # remove pixels that differ more than 5 Celsius degrees
     rowdata[rowdata < 0] = np.nan   # remove pixels that are colder than the median
 
     # compute the mean deviation of each pixel over all tempfiles

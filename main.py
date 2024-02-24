@@ -49,8 +49,8 @@ if __name__ == "__main__":
     print("LEN IMAGES",len(im_list),im_list)
 
     # retrieve existing temperature images
-    classification_method = 0
-    k = 3
+    classification_method = 1
+    k = 4
     iterations = 1
     method = str(classification_method)+str(k)+str(iterations)
     processed_dest = "./data/processed/"+method

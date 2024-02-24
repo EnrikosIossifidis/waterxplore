@@ -38,7 +38,10 @@ def plot_timeline(folder,df):
     fig = plt.figure()
     x_data = df['date_str'].values
     y_data = df['medians'].values
-    ymin, ymax = min(y_data) - 3, max(y_data) + 3
+    if np.isnan(y_data).all():
+        ymin, ymax = -275, -275
+    else:
+        ymin, ymax = min(y_data) - 3, max(y_data) + 3
 
     # Function to update the plot at each step
     time_figs = []
