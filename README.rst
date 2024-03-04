@@ -2,7 +2,7 @@
 waterxplore
 ==================
 
-.. image:: https://github.com/EnrikosIossifidis/waterxplore/blob/master/data/output/test/figures/HOTSPOTS.png
+.. image:: https://github.com/EnrikosIossifidis/waterxplore/blob/master/data/output/test/figures/testgif.gif
         :alt: Documentation Status
 
 
