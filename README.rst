@@ -9,8 +9,7 @@ waterxplore
 .. image:: https://img.shields.io/travis/audreyr/python_boilerplate.svg
         :target: https://travis-ci.com/audreyr/python_boilerplate
 
-.. image:: https://readthedocs.org/projects/python-boilerplate/badge/?version=latest
-        :target: https://python-boilerplate.readthedocs.io/en/latest/?version=latest
+.. image:: https://github.com/EnrikosIossifidis/waterxplore/blob/master/data/output/test/figures/HOTSPOTS.png
         :alt: Documentation Status
 
 
