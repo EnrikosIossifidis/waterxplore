@@ -2,15 +2,7 @@
 waterxplore
 ==================
 
-
-.. image:: https://img.shields.io/pypi/v/python_boilerplate.svg
-        :target: https://pypi.python.org/pypi/python_boilerplate
-
-.. image:: https://img.shields.io/travis/audreyr/python_boilerplate.svg
-        :target: https://travis-ci.com/audreyr/python_boilerplate
-
 .. image:: https://github.com/EnrikosIossifidis/waterxplore/blob/master/data/output/test/figures/HOTSPOTS.png
-        :target: https://travis-ci.com/audreyr/python_boilerplate
         :alt: Documentation Status
 
 
