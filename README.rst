@@ -20,11 +20,11 @@ Features
 * Downloading Landsat images given latitude and longitude and time period
 * Process and save Landsat images to compute water temperature for Dutch waters
 * Adjust parameters to erode and select water pixels from borders
-* Compute median temperature of each frame in the GIF
+* Compute median water temperature of each frame in the GIF
 * Compute hotspots of GIF: show map with pixels which have a positive devation overall
 
 
-Getting Started
+Requirements
 -------
 
 
