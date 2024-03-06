@@ -2,7 +2,7 @@
 waterxplore
 ==================
 
-This repository computes a GIF of any (Dutch) location with the water temperature, using Landsat images (USGS/NASA https://earthexplorer.usgs.gov/). Additionally, the graph of the median water temperature of each image is plotted.
+This Python package computes a GIF of any (Dutch) location with the water temperature, using Landsat images (USGS/NASA https://earthexplorer.usgs.gov/). Additionally, the graph of the median water temperature of each image is plotted.
 
 .. image:: https://github.com/EnrikosIossifidis/waterxplore/blob/master/data/output/test/figures/testgif.gif
         :alt: Documentation Status
@@ -26,6 +26,9 @@ Features
 
 Requirements
 -------
+```bash
+$ yarn add --dev requirements
+```
 
 
 Example 
