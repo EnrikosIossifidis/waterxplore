@@ -27,7 +27,7 @@ Features
 Requirements
 -------
 
-```bash
+```
 cd backend
 echo "OPENAI_API_KEY=sk-your-key" > .env
 poetry install
