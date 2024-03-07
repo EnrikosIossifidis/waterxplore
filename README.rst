@@ -27,17 +27,26 @@ Features
 Requirements
 -------
 
+* Internet connection to run script (specifically for landsatxplore)
+* Download water map (.gpkg file) of Dutch waters from 
+* Create user account on https://earthexplorer.usgs.gov/ the first time, to be able to use the 'landsatxplore' API
+* pip install necessary packages important Python packages:
+
 ```
-cd backend
-echo "OPENAI_API_KEY=sk-your-key" > .env
-poetry install
-poetry shell
-poetry run uvicorn main:app --reload --port 7001
-```
+pip install rasterio
+pip install geopandas
+``` 
 
 
 Example 
 -------
+
+```
+python main.py
+Lat, Long: 42, 42
+Radius: 
+Period:
+``` 
 
 
 
