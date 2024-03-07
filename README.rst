@@ -28,7 +28,7 @@ Requirements
 -------
 
 * Internet connection to run script (specifically for landsatxplore)
-* Download water map (.gpkg file) of Dutch waters from 
+* Download water map (.gpkg file) of Dutch waters from https://service.pdok.nl/brt/topnl/atom/index.xml
 * Create user account on https://earthexplorer.usgs.gov/ the first time, to be able to use the 'landsatxplore' API
 * pip install necessary Python packages such as:
 
