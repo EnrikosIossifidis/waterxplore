@@ -30,12 +30,10 @@ Requirements
 * Internet connection to run script (specifically for landsatxplore)
 * Download water map (.gpkg file) of Dutch waters from 
 * Create user account on https://earthexplorer.usgs.gov/ the first time, to be able to use the 'landsatxplore' API
-* pip install necessary packages important Python packages:
+* pip install necessary Python packages such as:
 
-```
-pip install rasterio
-pip install geopandas
-``` 
+```pip install rasterio
+pip install geopandas``` 
 
 
 Example 
