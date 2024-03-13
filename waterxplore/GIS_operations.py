@@ -35,7 +35,9 @@ def mask(dest,file,choice=0):
     im = image.read(1)
     if choice == 0:
         print("MASK CHOICE",choice)
-        im2 = (im == 21952) | (im == 21824) | (im == 23888) | (im == 23826) | (im == 21890)
+        im2 = (im == 21952) | (im == 21824) | (im == 23888) | (im == 23826) | (im == 21890) |\
+            (im == 21762) | (im == 22018) | (im == 22080) | (im == 22280) | (im == 23826) | (im == 23888) |\
+            (im == 24082) | (im == 24144)
     elif choice == 1:
         print("MASK CHOICE",choice)
         im2 = (im == 21952)

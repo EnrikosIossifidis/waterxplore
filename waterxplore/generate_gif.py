@@ -6,8 +6,8 @@ os.chdir("../")
 from landsatxplore.api import API
 os.chdir("./waterxplore")
 
-def get_landsat_scenes(username, password, lat, long, date):
-    previous_month, next_month = get_previous_and_next_month_dates(date)
+def get_landsat_scenes(username, password, lat, long, date,period):
+    previous_month, next_month = get_previous_and_next_month_dates(date,period)
     print("Previous Month:", previous_month.strftime('%Y-%m-%d'))
     print("Next Month:", next_month.strftime('%Y-%m-%d'))
     api = API(username, password)

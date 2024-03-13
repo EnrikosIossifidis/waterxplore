@@ -10,7 +10,7 @@ from PIL import Image
 from datetime import datetime
 
 def dateobj(cur):
-    cur['date_str'] = str(cur['date'].strftime("%Y-%m-%d"))
+    cur['date_str'] = str(cur['date'].strftime("%d-%m-%Y"))
     cur['date_ordinal'] = cur['date'].toordinal()
     return cur
 
@@ -52,8 +52,8 @@ def plot_timeline(folder,df):
         plt.plot(cur_x, cur_y, marker='o', linestyle='-') # Plot the updated data
         plt.xticks(cur_x,rotation=45) # Set plot limits
         plt.ylim(ymin, ymax)
-        plt.ylabel('Mediaan Temperatuur') # Add labels and title
-        plt.title('Temperatuur over tijd in gebied')
+        plt.ylabel('Median Temperature') # Add labels and title
+        plt.title('Temperature over time of selected area')
         fig.subplots_adjust(bottom=0.18)
         figurename = folder+"/figures/"+"median_timeframe"+"_"+str(frame)+".png"
         time_figs.append(figurename)

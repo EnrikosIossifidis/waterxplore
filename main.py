@@ -31,7 +31,7 @@ if __name__ == "__main__":
               8:"augustus",9:"september",10:"oktober", 11:"november", 12:"december"}
 
     # get user input
-    lat,long,rad,name,date = get_user_input()
+    lat,long,rad,name,date,period = get_user_input()
     output_dest = "./data/output/"+name
     if os.path.exists(output_dest):
         shutil.rmtree(output_dest)
@@ -44,13 +44,13 @@ if __name__ == "__main__":
 
     # get landsat images in area (around date)
     username = 'enrikosiossifidis'
-    password = 'Dummy'
-    images, im_list = get_landsat_scenes(username,password,lat,long,date)
+    password = 'Beatles-1969'
+    images, im_list = get_landsat_scenes(username,password,lat,long,date,period)
     print("LEN IMAGES",len(im_list),im_list)
 
     # retrieve existing temperature images
-    classification_method = 1
-    k = 4
+    classification_method = 0
+    k = 3
     iterations = 1
     method = str(classification_method)+str(k)+str(iterations)
     processed_dest = "./data/processed/"+method
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         os.mkdir(processed_dest)
     tempfiles = get_existing_temp_files2(processed_dest, im_list)
     todownload = [k for k,v in tempfiles.items() if v==0]
-    # print("TEMPFILES BEFORE", tempfiles,"\nLEN MISSING RAW FILES", len(todownload))
+    print("TEMPFILES BEFORE", tempfiles,"\nLEN MISSING RAW FILES", len(todownload))
 
     download = False
     for cur in todownload:
@@ -84,11 +84,12 @@ if __name__ == "__main__":
             os.mkdir(processed_files_dest)
             landsat_files = list(glob.glob(landsat_dest+"/*"))
             if landsat_files:
+                print("FILES", landsat_files,processed_files_dest,k,iterations,classification_method)
                 curtempfile = mask_erode_temperature(landsat_files,processed_files_dest,k,iterations,classification_method)
                 tempfiles[cur] = curtempfile # update tempfiles with last computed file
 
     # tempfiles = {cur:curtempfile}
-    # print("TEMPFILES AFTER", tempfiles)
+    print("TEMPFILES AFTER", tempfiles)
 
     temp_clipped_files = []
     rgb_clipped_files = []
@@ -116,7 +117,7 @@ if __name__ == "__main__":
         with rasterio.open(t) as src:
             temp_im = src.read(1, masked=True)
             temp_im = temp_im.astype(float)
-            temp_im[temp_im == 256] = np.nan
+            temp_im[temp_im > 255] = np.nan
         curmin = np.nanmin(temp_im)
         curmax = np.nanmax(temp_im)
         if vmin > curmin:

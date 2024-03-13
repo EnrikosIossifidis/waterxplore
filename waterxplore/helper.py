@@ -17,24 +17,25 @@ def unzip_tar(f,dest):
     file.extractall(dest)
     file.close()
 
-def get_previous_and_next_month_dates(input_date):
-    previous_month_date = input_date - timedelta(days=30)
-    next_month_date = input_date + timedelta(days=30)  # Using 31 days to ensure we move to the next month
+def get_previous_and_next_month_dates(input_date,period):
+    previous_month_date = input_date - timedelta(days=period)
+    next_month_date = input_date + timedelta(days=period)  # Using 31 days to ensure we move to the next month
     return previous_month_date, next_month_date
 
-def get_user_input(rad=2500,name='test',year=2023,month=7,day=8):
+def get_user_input(rad=2500,name='test',year=2023,month=7,day=8,period=30):
     latlong = input("Latitude, Longitude: ")
     latlong = latlong.split(",")
     lat = float(latlong[0])
     long = float(latlong[1])
     # name = 'test'
-    # rad = float(input("Radius around point: "))
-    # name = input("Name area: ")
-    # year = int(input('Enter a year '))
-    # month = int(input('Enter a month (number) '))
-    # day = int(input('Enter a day (number) '))
+    rad = float(input("Radius around point: "))
+    name = input("Name area: ")
+    year = int(input('Enter a year '))
+    month = int(input('Enter a month (number) '))
+    day = int(input('Enter a day (number) '))
+    period = int(input('Enter number of days of period (number) '))
     date = datetime.date(year, month, day)
-    return lat,long,rad,name,date
+    return lat,long,rad,name,date,period
 
 def create_gpkg(lon, lat, output_file, buffer_meters=100):
     # Create a Point geometry at the specified longitude and latitude
@@ -89,6 +90,7 @@ def plot_rgb_temp(name, curtemp, currgb, outputdest,vmin=10,vmax=30,title=None):
         temp_data = src.read(1, masked=True)
         temp_data = temp_data.astype(float)
         temp_data[temp_data == 256] = np.nan
+        print("AFTER SET TEMP DATA", np.unique(temp_data))
 
     fig, ax = plt.subplots(1)
     contrast = 3.5
@@ -102,15 +104,18 @@ def plot_rgb_temp(name, curtemp, currgb, outputdest,vmin=10,vmax=30,title=None):
     rgb_image = np.clip(rgb_image,a_min=0,a_max=1)
     pos = ax.imshow(rgb_image)
 
-    hsv_modified2 = cm.get_cmap('Reds', 256)  # create new hsv colormaps in range of 0.3 (green) to 0.7 (blue)
-    newcmp2 = ListedColormap(hsv_modified2(np.linspace(0.3, 1., 256)))  # show figure
+    hsv_modified2 = cm.get_cmap('bwr', 256)  # create new hsv colormaps in range of 0.3 (green) to 0.7 (blue)
+    newcmp2 = ListedColormap(hsv_modified2(np.linspace(0.01, 1., 256)))  # show figure
     pos2 = ax.imshow(temp_data, cmap=newcmp2)
 
     pos2.set_clim(vmin, vmax)
     fig.colorbar(pos2,label="Celsius")
     plt.axis('off')
     if not title:
-        title = name.split("_")[-4]
+        name_splitted = name.split("_")
+        title = datetime.datetime.strptime(name_splitted[-4],"%Y%m%d")
+        pathrow = name_splitted[-5]
+        title = "datum: "+title.strftime("%d-%m-%Y")+" ("+pathrow+")"
     plt.title(title)
     fig.tight_layout()
     plt.savefig(outputdest+'figures/'+name+'.png')
