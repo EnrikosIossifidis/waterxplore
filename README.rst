@@ -41,9 +41,11 @@ Example
 
 ```
 python main.py
-Lat, Long: 42, 42
-Radius: 
-Period:
+Lat, Long: 52.46927812825346, 4.552707932030656
+Radius: 2000
+Enter a year: 2023
+Enter a month: 7
+Enter a day: 7
 ``` 
 
 
@@ -53,7 +55,7 @@ Important Notes
 * The first time the script will need to download and process many Landsat images, this will result in a long first runtime
 * The Landsat images are large files, almost 1 GB per Landsat image
 * Be cautious with jumping too fast to conclusions: the "waterxplore"-temperature can deviate, especially for small waters, from the real water temperature. It is likely to overestimate the real water temperature in summer for example
-
+* For previous years it may be necessary to use a Dutch water map of that year
 
 Credits
 -------
