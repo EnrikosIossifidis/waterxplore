@@ -46,6 +46,7 @@ Radius: 2000
 Enter a year: 2023
 Enter a month: 7
 Enter a day: 7
+Enter number of days of period (number): 30
 ``` 
 
 
