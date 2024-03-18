@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import rasterio
 import rasterio.mask
+import matplotlib
 import matplotlib.pyplot as plt
 import glob
 import pandas as pd
@@ -46,18 +47,17 @@ def plot_timeline(folder,df):
     # Function to update the plot at each step
     time_figs = []
     for frame in range(len(x_data)):
-        cur_x = x_data[:frame + 1]
-        cur_y = y_data[:frame + 1]
-        plt.clf() # Clear the previous plot
-        plt.plot(cur_x, cur_y, marker='o', linestyle='-') # Plot the updated data
-        plt.xticks(cur_x,rotation=45) # Set plot limits
+        fig.clf() # Clear the previous plot
+        plt.plot(x_data, y_data, marker='o', linestyle='-') # Plot the updated data
+        plt.scatter(x_data[frame],y_data[frame],marker='D',s=100,color='red')
+        plt.xticks(x_data,rotation=45) # Set plot limits
         plt.ylim(ymin, ymax)
         plt.ylabel('Median Temperature') # Add labels and title
         plt.title('Temperature over time of selected area')
         fig.subplots_adjust(bottom=0.18)
         figurename = folder+"/figures/"+"median_timeframe"+"_"+str(frame)+".png"
         time_figs.append(figurename)
-        plt.savefig(figurename)
+        fig.savefig(figurename)
     df['timeline_file'] = time_figs
     return df
 

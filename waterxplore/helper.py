@@ -104,10 +104,9 @@ def plot_rgb_temp(name, curtemp, currgb, outputdest,vmin=10,vmax=30,title=None):
     rgb_image = np.clip(rgb_image,a_min=0,a_max=1)
     pos = ax.imshow(rgb_image)
 
-    hsv_modified2 = cm.get_cmap('bwr', 256)  # create new hsv colormaps in range of 0.3 (green) to 0.7 (blue)
+    hsv_modified2 = cm.get_cmap('Reds', 256)  # create new hsv colormaps in range of 0.3 (green) to 0.7 (blue)
     newcmp2 = ListedColormap(hsv_modified2(np.linspace(0.01, 1., 256)))  # show figure
     pos2 = ax.imshow(temp_data, cmap=newcmp2)
-
     pos2.set_clim(vmin, vmax)
     fig.colorbar(pos2,label="Celsius")
     plt.axis('off')

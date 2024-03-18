@@ -44,7 +44,7 @@ if __name__ == "__main__":
 
     # get landsat images in area (around date)
     username = 'enrikosiossifidis'
-    password = 'Beatles-1969'
+    password = 'Dummypassword'
     images, im_list = get_landsat_scenes(username,password,lat,long,date,period)
     print("LEN IMAGES",len(im_list),im_list)
 
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     todownload = [k for k,v in tempfiles.items() if v==0]
     print("TEMPFILES BEFORE", tempfiles,"\nLEN MISSING RAW FILES", len(todownload))
 
-    download = False
+    download = True
     for cur in todownload:
         curdate = datetime.strptime(cur.split("_")[3],"%Y%m%d")
         curmonth = months[curdate.month]

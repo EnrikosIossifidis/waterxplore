@@ -17,7 +17,7 @@ def get_landsat_scenes(username, password, lat, long, date,period):
         longitude=long,
         start_date=previous_month.strftime('%Y-%m-%d'),
         end_date=next_month.strftime('%Y-%m-%d'),
-        max_cloud_cover=10
+        max_cloud_cover=30
     )
 
     # change filename to another format
