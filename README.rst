@@ -41,11 +41,17 @@ Example
 
 ```
 python main.py
+
 Lat, Long: 52.46927812825346, 4.552707932030656
+
 Radius: 2000
+
 Enter a year: 2023
+
 Enter a month: 7
+
 Enter a day: 7
+
 Enter number of days of period (number): 30
 ``` 
 
