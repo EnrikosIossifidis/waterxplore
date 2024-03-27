@@ -27,7 +27,6 @@ def get_user_input(rad=2500,name='test',year=2023,month=7,day=8,period=30):
     latlong = latlong.split(",")
     lat = float(latlong[0])
     long = float(latlong[1])
-    # name = 'test'
     rad = float(input("Radius around point: "))
     name = input("Name area: ")
     year = int(input('Enter a year '))
@@ -35,7 +34,7 @@ def get_user_input(rad=2500,name='test',year=2023,month=7,day=8,period=30):
     day = int(input('Enter a day (number) '))
     period = int(input('Enter number of days of period (number) '))
     date = datetime.date(year, month, day)
-    return lat,long,rad,name,date,period
+    return lat,long,rad,name.replace(" ","-"),date,period
 
 def create_gpkg(lon, lat, output_file, buffer_meters=100):
     # Create a Point geometry at the specified longitude and latitude
@@ -90,7 +89,6 @@ def plot_rgb_temp(name, curtemp, currgb, outputdest,vmin=10,vmax=30,title=None):
         temp_data = src.read(1, masked=True)
         temp_data = temp_data.astype(float)
         temp_data[temp_data == 256] = np.nan
-        print("AFTER SET TEMP DATA", np.unique(temp_data))
 
     fig, ax = plt.subplots(1)
     contrast = 3.5

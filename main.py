@@ -44,9 +44,9 @@ if __name__ == "__main__":
 
     # get landsat images in area (around date)
     username = 'enrikosiossifidis'
-    password = 'Dummypassword'
+    password = 'Beatles-1969'
     images, im_list = get_landsat_scenes(username,password,lat,long,date,period)
-    print("LEN IMAGES",len(im_list),im_list)
+    print("LEN IMAGES",len(im_list))
 
     # retrieve existing temperature images
     classification_method = 0
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         os.mkdir(processed_dest)
     tempfiles = get_existing_temp_files2(processed_dest, im_list)
     todownload = [k for k,v in tempfiles.items() if v==0]
-    print("TEMPFILES BEFORE", tempfiles,"\nLEN MISSING RAW FILES", len(todownload))
+    print("\nLEN MISSING RAW FILES", len(todownload))
 
     download = True
     for cur in todownload:
@@ -81,15 +81,16 @@ if __name__ == "__main__":
         if os.path.exists(landsat_dest):
             # compute temperature maps (if not already computed)
             processed_files_dest = processed_dest+"/"+cur
+            if os.path.exists(processed_files_dest):
+                os.remove(processed_files_dest)
             os.mkdir(processed_files_dest)
             landsat_files = list(glob.glob(landsat_dest+"/*"))
             if landsat_files:
-                print("FILES", landsat_files,processed_files_dest,k,iterations,classification_method)
                 curtempfile = mask_erode_temperature(landsat_files,processed_files_dest,k,iterations,classification_method)
                 tempfiles[cur] = curtempfile # update tempfiles with last computed file
 
     # tempfiles = {cur:curtempfile}
-    print("TEMPFILES AFTER", tempfiles)
+    # print("TEMPFILES AFTER", tempfiles)
 
     temp_clipped_files = []
     rgb_clipped_files = []
