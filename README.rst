@@ -67,7 +67,7 @@ Important Notes
 Credits
 -------
 
-First of all, the code was made possible by Willem Boone and the help of Rinus Schroevers. Thank you for help. Additionally I want to thank the Landelijk Meetnetwerk Water of Rijkswaterstaat and KNMI for providing daily free water and air temperature data of their stations. 
+First of all, the code was made possible by Willem Boone and the help of Rinus Schroevers. Thank you again for all the advise and help. Additionally I want to thank the Landelijk Meetnetwerk Water of Rijkswaterstaat and KNMI for providing daily free water and air temperature data of their stations. 
 
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
 
